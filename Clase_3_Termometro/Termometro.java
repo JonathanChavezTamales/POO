@@ -1,4 +1,4 @@
-public class Termometro{
+public class Termometro implements Comparable{
 
 	private int temp;
 	
@@ -19,6 +19,13 @@ public class Termometro{
 
 	public int getTemp(){
 		return temp;
+	}
+
+
+	//Compareto
+	public int compareTo(Object t){
+		Termometro term = (Termometro)t;
+		return this.temp = term.temp;
 	}
 
 

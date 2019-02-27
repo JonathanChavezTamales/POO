@@ -1,4 +1,4 @@
-class Clock{
+class Clock implements Comparable{
 
 	private int h, m, s;
 	
@@ -60,7 +60,17 @@ class Clock{
 		return Clock(this.h, this.m, this.s);
 	}	
 
-
+	//Comparable
+	public int Comparable(Object clock){
+		Clock xc = (Clock)clock;
+		int xc_seconds = xc.s;
+		int lc_seconds = this.s;
+		xc_seconds += xc.m*60;
+		lc_seconds += this.m*60;
+		xc_seconds += xc.h*60*60;
+	       	lc_seconds += this.h*60*60;
+		return lc_seconds - xc_seconds;	
+	}
 
 
 

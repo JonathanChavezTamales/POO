@@ -9,6 +9,7 @@ class UsaClock{
 			System.out.println("Iguales");
 		else
 			System.out.println("Diferentes");
+		System.out.println(gda.compareTo(ny));
 	}
 
 
