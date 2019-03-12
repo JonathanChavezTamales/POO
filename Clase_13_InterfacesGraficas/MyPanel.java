@@ -11,6 +11,7 @@ public class MyPanel extends JPanel implements Runnable{
 
     private Image fondo;
     private int xV, yV;
+    private String nombre = "Pocoyo";
 
     public MyPanel(){
         super();
@@ -31,6 +32,17 @@ public class MyPanel extends JPanel implements Runnable{
 
         g.setColor(Color.GRAY);
         g.fillOval(xV+20, yV+40, 300, 200);
+        g.setColor(Color.WHITE);
+        g.drawString("Vamos "+this.nombre+"!", xV+120, yV+260);
+    }
+
+    public void setNombre(String n){
+        this.nombre = n;
+    }
+
+    public void setyV(int n){
+        this.yV = -n;
+        repaint();
     }
 
     @Override
