@@ -3,11 +3,13 @@ import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.event.MouseListener;
+
 import javax.swing.ImageIcon;
 import java.lang.InterruptedException;
 
 
-public class MyPanel extends JPanel implements Runnable{
+public class MyPanel extends JPanel implements Runnable, MouseListener{
 
     private Image fondo;
     private int xV, yV;
