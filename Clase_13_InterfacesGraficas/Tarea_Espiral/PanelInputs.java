@@ -1,3 +1,6 @@
+
+//Jonathan de Jesus Chavez Tabares A01636160
+
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -47,7 +50,7 @@ public class PanelInputs extends JPanel implements ActionListener {
 
         if (evt.getSource() == this.dibujar) {
 
-            p.puntos = p.generaPuntos(Integer.parseInt(this.n.getText()), Integer.parseInt(this.n.getText()),
+            p.puntos = p.generaPuntos(Integer.parseInt(this.n.getText()), Integer.parseInt(this.radioInicial.getText()),
                     Integer.parseInt(this.stepSize.getText()), this.clockWise.isSelected());
             p.n = Integer.parseInt(this.n.getText());
             p.repaint();

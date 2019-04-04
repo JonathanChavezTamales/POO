@@ -1,4 +1,7 @@
+
+//Jonathan de Jesus Chavez Tabares A01636160
 import javax.swing.JFrame;
+
 import java.awt.Graphics;
 import java.awt.Dimension;
 import java.awt.BorderLayout;
