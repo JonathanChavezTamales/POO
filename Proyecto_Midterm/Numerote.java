@@ -7,6 +7,8 @@
     Jose Miguel
 */
 
+//FIXME: Multiplicar
+
 public class Numerote {
 
     byte[] numerote;
@@ -17,7 +19,9 @@ public class Numerote {
         signo = true;
     }
 
+    // Este metodo no valida vacios ni otros caracteres
     public Numerote(String n) {
+
         // Crea array con puros ceros
         if (n.charAt(0) == '-') {
             numerote = new byte[n.length() - 1];
@@ -39,20 +43,32 @@ public class Numerote {
     }
 
     /*
-     * 
      * CASOS: A+B = A.SUMA(B) signo + (-A)+B = B.RESTA(A) A+(-B) = A.RESTA(B)
      * (-A)+(-B) = A.SUMA(B) signo -
-     * 
      * 
      */
 
     public Numerote suma(Numerote b) {
 
-        // Se obtiene el length mayor de los dos numeros y el menor
-        Numerote maxNumerote = this.numerote.length < b.numerote.length ? b : this;
-        Numerote minNumerote = this.numerote.length > b.numerote.length ? b : this;
+        if (this.toString().equals("0") && b.toString().equals("0")) {
+            return new Numerote("0");
+        }
 
+        Numerote a = this.trimZeros();
+        b = b.trimZeros();
         Numerote r = new Numerote();
+
+        // Se obtiene el length mayor de los dos numeros y el menor
+
+        Numerote maxNumerote, minNumerote;
+        if (a.esMayorOIgual(b)) {
+            maxNumerote = a;
+            minNumerote = b;
+        } else {
+            maxNumerote = b;
+            minNumerote = a;
+        }
+
         // Se inicializa el arreglo con una casilla extra por si hay carry out.
         r.numerote = new byte[maxNumerote.numerote.length + 1];
 
@@ -63,17 +79,19 @@ public class Numerote {
          * 
          */
 
-        if (!this.signo && !b.signo) {
+        if (!a.signo && !b.signo) {
             r.signo = false;
-        } else if (!this.signo && b.signo) {
-            return b.resta(this);
-        } else if (this.signo && !b.signo) {
-            return this.resta(b);
+        } else if (!a.signo && b.signo) {
+            a.signo = true;
+            return b.resta(a);
+        } else if (a.signo && !b.signo) {
+            b.signo = true;
+            return a.resta(b);
         }
 
         int i = 0;
         while (i < minNumerote.numerote.length) {
-            byte res = (byte) (this.numerote[i] + b.numerote[i] + r.numerote[i]);
+            byte res = (byte) (a.numerote[i] + b.numerote[i] + r.numerote[i]);
             r.numerote[i] = (byte) (res % 10);
             if (res >= 10)
                 r.numerote[i + 1]++;
@@ -83,11 +101,17 @@ public class Numerote {
             r.numerote[i] += maxNumerote.numerote[i];
             i++;
         }
-
-        return r;
+        if (r.trimZeros().toString().equals("")) {
+            return new Numerote("0");
+        }
+        return r.trimZeros();
     }
 
     public Numerote resta(Numerote b) {
+
+        if (this.toString().equals("0") && b.toString().equals("0")) {
+            return new Numerote("0");
+        }
 
         /*
          * A-B = A-B done (-A)-B = -(A+B) done A-(-B) = A+B (-A)-(-B) = -A+B = B-A done
@@ -102,18 +126,27 @@ public class Numerote {
             b.signo = true;
             a.signo = true;
             r = b.resta(a);
+            if (r.trimZeros().toString().equals("")) {
+                return new Numerote("0");
+            }
             return r.trimZeros();
         } else if (!a.signo && b.signo) {
             b.signo = true;
             a.signo = true;
-            r = this.suma(b);
+            r = a.suma(b);
             r.signo = false;
+            if (r.trimZeros().toString().equals("")) {
+                return new Numerote("0");
+            }
             return r.trimZeros();
         } else if (a.signo && !b.signo) {
             b.signo = true;
             a.signo = true;
-            r = this.suma(b);
+            r = a.suma(b);
             r.signo = true;
+            if (r.trimZeros().toString().equals("")) {
+                return new Numerote("0");
+            }
             return r.trimZeros();
         }
 
@@ -144,7 +177,12 @@ public class Numerote {
             r.numerote[i] += maxNumerote.numerote[i];
             i++;
         }
+
+        if (r.trimZeros().toString().equals("")) {
+            return new Numerote("0");
+        }
         return r.trimZeros();
+
     }
 
     public Numerote trimZeros() {
@@ -162,6 +200,7 @@ public class Numerote {
         for (int i = this.numerote.length - trailingZeros - 1; i >= 0; i--) {
             r.numerote[i] = this.numerote[i];
         }
+
         return r;
     }
 
@@ -188,17 +227,32 @@ public class Numerote {
     }
 
     public Numerote multiplica(Numerote b) {
+
+        if (this.toString().equals("0") || b.toString().equals("0")) {
+            return new Numerote();
+        }
+
+        Numerote r = new Numerote();
+
         Numerote a = this.trimZeros();
         b = b.trimZeros();
 
-        Numerote r = new Numerote();
         r.numerote = new byte[a.numerote.length + b.numerote.length];
+        String multiplicador = "";
+        Numerote p = new Numerote();
+        int res;
 
         for (int i = 0; i < a.numerote.length; i++) {
+            p.numerote = new byte[a.numerote.length + b.numerote.length];
+
             for (int j = 0; j < b.numerote.length; j++) {
-                r.numerote[j + i] += (byte) (a.numerote[i] * b.numerote[j] % 10);
-                r.numerote[j + i + 1] += (byte) (a.numerote[i] * b.numerote[j] / 10);
+                res = ((a.numerote[i] * b.numerote[j] + p.numerote[j]));
+                p.numerote[j] = (byte) ((a.numerote[i] * b.numerote[j] + p.numerote[j]) % 10);
+                p.numerote[j + 1] = (byte) (res / 10);
             }
+            Numerote nlocal = new Numerote(p.toString() + multiplicador);
+            r = r.suma(nlocal);
+            multiplicador += "0";
         }
 
         if (a.signo ^ b.signo)
@@ -206,7 +260,7 @@ public class Numerote {
         else
             r.signo = true;
 
-        return r;
+        return r.trimZeros();
     }
 
     public String toString() {
@@ -226,7 +280,7 @@ public class Numerote {
 
     public static void main(String[] args) {
         Numerote a = new Numerote("5001");
-        Numerote b = new Numerote("4999");
+        Numerote b = new Numerote("499");
         Numerote suma = (a.suma(b).suma(new Numerote("1"))).suma(a).trimZeros();
         System.out.println(suma.toString());
         Numerote c = new Numerote("4999");
@@ -235,7 +289,13 @@ public class Numerote {
         System.out.println(new Numerote("-440").resta(new Numerote("59")));
         System.out.println(new Numerote("440").resta(new Numerote("-59")));
         System.out.println(new Numerote("440").resta(new Numerote("59")));
-        System.out.println(new Numerote("6").multiplica(new Numerote("-3")));
+        // Bugs
+        // FIXME: multiplicacion de numeros grandes, suma y resta de 0s
+        System.out.println("BUGS");
+        System.out.println(new Numerote("0").resta(new Numerote("0")));
+        System.out.println(new Numerote("0").suma(new Numerote("0")));
+
+        System.out.println(new Numerote("987654321").multiplica(new Numerote("123456789")));
 
     }
 }
