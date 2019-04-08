@@ -16,6 +16,3 @@ Ahora con el programa `comparar_resultados.py` podemos pasarle como argumentos d
 
 Al ejecutar tendremos un reporte con la precisión de nuestras funciones, y un archivo con cada operación; si es 1 fue correcto, 0 incorrecto.
  
-
-
-Para crear un archivo con operaciones 
