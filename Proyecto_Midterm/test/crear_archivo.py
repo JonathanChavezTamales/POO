@@ -1,7 +1,7 @@
 import random
 import sys
 
-ops = 10000
+ops = 30000
 
 try:
     file_name = sys.argv[1] #Nombre del archivo se pasa como command line arg
